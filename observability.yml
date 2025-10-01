@@ -5,7 +5,7 @@ services:
       - rede_app
     ports:
       - 3000:3000
-asd
+
 
 
 networks:
