@@ -1,0 +1,13 @@
+services:
+  grafana:
+    image: grafana/grafana:main
+    networks:
+      - rede_app
+    ports:
+      - 3000:3000
+
+
+
+networks:
+  rede_app:
+    external: true
