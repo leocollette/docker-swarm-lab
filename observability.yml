@@ -1,13 +1,21 @@
 services:
   grafana:
+    container_name: grafana
     image: grafana/grafana:main
     networks:
       - rede_app
     ports:
-      - 3000:3000
+      - '3000:3000'
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    restart: unless-stopped
+
 
 
 
 networks:
   rede_app:
     external: true
+
+volumes:
+  grafana-storage:
