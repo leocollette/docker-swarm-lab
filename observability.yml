@@ -1,6 +1,10 @@
 services:
+
+
+
+
+
   grafana:
-    container_name: grafana
     image: grafana/grafana:main
     networks:
       - rede_app
@@ -8,10 +12,24 @@ services:
       - '3000:3000'
     volumes:
       - grafana-storage:/var/lib/grafana
-    restart: unless-stopped
+    deploy:
+      restart_policy:
+        condition: on-failure
 
-
-
+  prometheus:
+    image: prom/prometheus:main
+    networks:
+      - rede_app
+    ports:
+      - '9090:9090'
+    volumes:
+      - prometheus-storage:/prometheus
+    configs:
+      - source: prometheus_config
+        target: /etc/prometheus/prometheus.yml
+    deploy:
+      restart_policy:
+        condition: on-failure
 
 networks:
   rede_app:
@@ -19,3 +37,8 @@ networks:
 
 volumes:
   grafana-storage:
+  prometheus-storage:
+
+configs:
+  prometheus_config:
+    external: true
