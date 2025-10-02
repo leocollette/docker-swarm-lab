@@ -1,8 +1,11 @@
 services:
+  cadvisor:
+    image: google/cadvisor:latest
 
 
 
-
+  node_exporter:
+    image: 
 
   grafana:
     image: grafana/grafana:main
