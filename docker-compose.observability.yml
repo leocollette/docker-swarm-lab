@@ -72,4 +72,4 @@ volumes:
 
 configs:
   prometheus_config:
-    external: true
+    file: ./configs/prometheus.yml
