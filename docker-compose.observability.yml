@@ -1,11 +1,35 @@
 services:
   cadvisor:
-    image: google/cadvisor:latest
-
-
+    image: gcr.io/cadvisor/cadvisor:v0.52.0
+    networks:
+      - rede_app
+    ports:
+      - '8080:8080'
+    privileged: true
+    devices:
+      - /dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    deploy:
+      mode: global
 
   node_exporter:
-    image: 
+    image: prom/node-exporter:latest
+    command:
+      - '--path.rootfs=/host'
+    networks:
+      - rede_app
+    ports:
+      - '9100:9100'
+    volumes:
+      - '/:/host:ro,rslave'
+    deploy:
+      mode: global
 
   grafana:
     image: grafana/grafana:main
