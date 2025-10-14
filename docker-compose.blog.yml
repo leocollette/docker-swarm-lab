@@ -1,0 +1,52 @@
+services:
+  haproxy:
+    image: haproxy:lts-alpine
+    configs:
+      - source: haproxy_config
+        target: /usr/local/etc/haproxy/haproxy.cfg
+    networks:
+      - rede_app
+    ports:
+      - '1000:1000'
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  wordpress:
+    image: wordpress:latest
+    environment:
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: testelab
+      WORDPRESS_DB_NAME: wordpress
+    volumes:
+      - wordpress:/var/www/
+    networks:
+      - rede_app
+    deploy:
+      restart_policy:
+        condition: on-failure
+
+  mariadb:
+    image: mariadb:latest
+    environment:
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: wordpress
+      MARIADB_PASSWORD: testelab
+      MARIADB_ROOT_PASSWORD: roottestelab
+    volumes:
+      - mariadb:/var/lib/mysql
+    networks:
+      - rede_app
+
+volumes:
+  wordpress:
+  mariadb:
+
+networks:
+  rede_app:
+    external: true
+
+configs:
+  haproxy_config:
+    file: ./configs/haproxy.cfg
