@@ -17,6 +17,8 @@ services:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     deploy:
       mode: global
+      restart_policy:
+        condition: on-failure
 
   node_exporter:
     image: prom/node-exporter:latest
@@ -30,6 +32,8 @@ services:
       - '/:/host:ro,rslave'
     deploy:
       mode: global
+      restart_policy:
+        condition: on-failure
 
   grafana:
     image: grafana/grafana:main
