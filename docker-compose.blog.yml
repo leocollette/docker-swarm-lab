@@ -15,9 +15,9 @@ services:
   wordpress:
     image: wordpress:latest
     environment:
-      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_HOST: mysql
       WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: testelab
+      WORDPRESS_DB_PASSWORD_FILE: /run/secrets/db_password
       WORDPRESS_DB_NAME: wordpress
     volumes:
       - wordpress:/var/www/
@@ -26,22 +26,33 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
+    secrets:
+      - db_password
 
-  mariadb:
-    image: mariadb:latest
+  mysql:
+    image: mysql:latest
     environment:
-      MARIADB_DATABASE: wordpress
-      MARIADB_USER: wordpress
-      MARIADB_PASSWORD: testelab
-      MARIADB_ROOT_PASSWORD: roottestelab
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root
     volumes:
-      - mariadb:/var/lib/mysql
+      - mysql:/var/lib/mysql
     networks:
       - rede_app
+    secrets:
+      - db_password
+      - db_root
+
+secrets:
+  db_root:
+    file: secrets/db_root.txt
+  db_password:
+    file: secrets/db_password.txt
 
 volumes:
   wordpress:
-  mariadb:
+  mysql:
 
 networks:
   rede_app:
