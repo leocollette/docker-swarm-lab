@@ -1,17 +1,4 @@
 services:
-  haproxy:
-    image: haproxy:lts-alpine
-    configs:
-      - source: haproxy_config
-        target: /usr/local/etc/haproxy/haproxy.cfg
-    networks:
-      - rede_app
-    ports:
-      - '1000:1000'
-    deploy:
-      restart_policy:
-        condition: on-failure
-
   wordpress:
     image: wordpress:latest
     environment:
@@ -23,6 +10,8 @@ services:
       - wordpress:/var/www/
     networks:
       - rede_app
+    ports:
+      - "1000:80"
     deploy:
       restart_policy:
         condition: on-failure
@@ -57,7 +46,3 @@ volumes:
 networks:
   rede_app:
     external: true
-
-configs:
-  haproxy_config:
-    file: ./configs/haproxy.cfg
